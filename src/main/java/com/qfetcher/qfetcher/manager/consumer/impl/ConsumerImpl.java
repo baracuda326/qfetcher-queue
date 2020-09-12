@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -28,8 +30,23 @@ public class ConsumerImpl implements Consumer {
     @Override
     public ResponseModel getResponse() {
         List<QuestionResponseModel> response = new ArrayList<>();
-        response.addAll(queue);
-        queue.clear();
+        int hardTimeout = 1; // seconds
+        final int[] count = {30};
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                while (!queue.isEmpty()) {
+                    if (count[0] <= 0) return;
+                    try {
+                        response.add(queue.take());
+                    } catch (InterruptedException e) {
+                        response.addAll(queue);
+                    }
+                    count[0]--;
+                }
+            }
+        };
+        new Timer(true).schedule(task, hardTimeout);
         return ResponseModel.builder()
                 .questions(response)
                 .build();

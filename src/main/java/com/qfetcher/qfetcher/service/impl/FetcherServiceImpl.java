@@ -61,7 +61,6 @@ public class FetcherServiceImpl implements FetcherService {
         } catch (IOException e) {
             throw new DataResourceException("No valid data resource!");
         }
-
         return consumer.getResponse();
     }
 //***************************************************************************
