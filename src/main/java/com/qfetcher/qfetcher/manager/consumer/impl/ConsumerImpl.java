@@ -4,6 +4,7 @@ import com.qfetcher.qfetcher.manager.broker.Broker;
 import com.qfetcher.qfetcher.manager.consumer.Consumer;
 import com.qfetcher.qfetcher.model.QuestionResponseModel;
 import com.qfetcher.qfetcher.model.ResponseModel;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,15 +34,12 @@ public class ConsumerImpl implements Consumer {
         int hardTimeout = 1; // seconds
         final int[] count = {30};
         TimerTask task = new TimerTask() {
+            @SneakyThrows
             @Override
             public void run() {
                 while (!queue.isEmpty()) {
                     if (count[0] <= 0) return;
-                    try {
-                        response.add(queue.take());
-                    } catch (InterruptedException e) {
-                        response.addAll(queue);
-                    }
+                    response.add(queue.take());
                     count[0]--;
                 }
             }
