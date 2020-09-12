@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * @author Dmitry Asmalouski
+ * @version 2.0
+ */
 @Service
 public class ConsumerImpl implements Consumer {
     private BlockingQueue<QuestionResponseModel> queue;

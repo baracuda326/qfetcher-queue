@@ -14,6 +14,10 @@ import java.util.Map;
 import static com.qfetcher.qfetcher.utils.ParseDataUtils.createFileFromUrl;
 import static com.qfetcher.qfetcher.utils.ParseDataUtils.getFileName;
 
+/**
+ * @author Dmitry Asmalouski
+ * @version 2.0
+ */
 @Service
 public class DataListenerServiceImpl implements DataListenerService {
     private final DataManifestRepository dataManifestRepository;

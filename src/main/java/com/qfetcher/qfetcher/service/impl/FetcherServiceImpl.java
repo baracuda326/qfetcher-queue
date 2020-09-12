@@ -7,7 +7,6 @@ import com.qfetcher.qfetcher.model.RequestModel;
 import com.qfetcher.qfetcher.model.ResponseModel;
 import com.qfetcher.qfetcher.service.DataListenerService;
 import com.qfetcher.qfetcher.service.FetcherService;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

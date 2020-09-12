@@ -18,7 +18,7 @@ public interface FetcherController {
             @ApiResponse(code = 408, message = "Error! Request Timeout"),
             @ApiResponse(code = 409, message = "Error! Conflict")
     })
-    @PostMapping("/api/v2/fetch")
+    @PostMapping("/api/v1/fetch")
     ResponseModel fetchQuestion(@RequestBody RequestModel requestModel);
     //****************************************************************************
 }

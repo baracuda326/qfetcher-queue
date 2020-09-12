@@ -17,6 +17,10 @@ import static com.qfetcher.qfetcher.utils.Constants.*;
 import static com.qfetcher.qfetcher.utils.FilesClearUtils.removeDirFile;
 import static com.qfetcher.qfetcher.utils.ParseDataUtils.*;
 
+/**
+ * @author Dmitry Asmalouski
+ * @version 2.0
+ */
 @Service
 public class FillDataServiceImpl implements FillDataService {
     private final DataResourceRepository dataResourceRepository;
@@ -28,6 +32,12 @@ public class FillDataServiceImpl implements FillDataService {
         this.broker = broker;
     }
 
+    //**************************************************************************
+
+    /**
+     * @param map Map<String, HashSet<String>>
+     * @throws IOException
+     */
     @Override
     public void fillData(Map<String, HashSet<String>> map) throws IOException {
         for (String key : map.keySet()) {
@@ -44,6 +54,10 @@ public class FillDataServiceImpl implements FillDataService {
     }
     //***************************************************************************
 
+    /**
+     * @param links HashSet<String>
+     * @throws IOException
+     */
     private void fillJson(HashSet<String> links) throws IOException {
         if (links != null) {
             for (String link : links) {
@@ -62,7 +76,9 @@ public class FillDataServiceImpl implements FillDataService {
     }
 
     //***************************************************************************
-
+    /**
+     * @param links HashSet<String>
+     */
     private void fillCsv(HashSet<String> links) {
         for (String link : links) {
             String csvName = getFileName(link);
@@ -78,6 +94,10 @@ public class FillDataServiceImpl implements FillDataService {
     }
 
     //***************************************************************************
+    /**
+     * @param links HashSet<String>
+     * @throws IOException
+     */
     private void fillImages(HashSet<String> links) throws IOException {
         for (String link : links) {
             String imageName = getFileName(link);
