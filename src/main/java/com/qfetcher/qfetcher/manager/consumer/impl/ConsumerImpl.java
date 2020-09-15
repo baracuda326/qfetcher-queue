@@ -1,18 +1,17 @@
 package com.qfetcher.qfetcher.manager.consumer.impl;
 
+import com.google.common.util.concurrent.SimpleTimeLimiter;
+import com.google.common.util.concurrent.TimeLimiter;
 import com.qfetcher.qfetcher.manager.broker.Broker;
 import com.qfetcher.qfetcher.manager.consumer.Consumer;
 import com.qfetcher.qfetcher.model.QuestionResponseModel;
 import com.qfetcher.qfetcher.model.ResponseModel;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.*;
 
 /**
  * @author Dmitry Asmalouski
@@ -31,20 +30,25 @@ public class ConsumerImpl implements Consumer {
     @Override
     public ResponseModel getResponse() {
         List<QuestionResponseModel> response = new ArrayList<>();
-        int hardTimeout = 1; // seconds
-        final int[] count = {30};
-        TimerTask task = new TimerTask() {
-            @SneakyThrows
-            @Override
-            public void run() {
-                while (!queue.isEmpty()) {
-                    if (count[0] <= 0) return;
-                    response.add(queue.take());
-                    count[0]--;
-                }
-            }
-        };
-        new Timer(true).schedule(task, hardTimeout);
+        ExecutorService es = Executors.newSingleThreadExecutor();
+        TimeLimiter timeLimiter = SimpleTimeLimiter.create(es);
+        try {
+            timeLimiter.callWithTimeout(() -> {
+                        while (!queue.isEmpty()) {
+                            response.add(queue.take());
+                        }
+                        return ResponseModel.builder()
+                                .questions(response)
+                                .build();
+                    }
+                    , 30L, TimeUnit.SECONDS);
+        } catch (TimeoutException | ExecutionException ex) {
+            return ResponseModel.builder()
+                    .questions(response)
+                    .build();
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
         return ResponseModel.builder()
                 .questions(response)
                 .build();
